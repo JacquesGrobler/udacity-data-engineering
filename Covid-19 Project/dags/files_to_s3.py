@@ -1,7 +1,7 @@
 import datetime as dt
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
-from operators import ImportFromKaggle, ExportToS3
+from operators import KaggleToS3
 
 default_args = {
     'owner': 'me',
@@ -22,8 +22,8 @@ dag = DAG('kaggle_to_s3',
 
 start_operator = DummyOperator(task_id='Begin_execution',  dag=dag)
 
-get_datasets = ImportFromKaggle(
-    task_id = 'get_data_from_kaggle',
+kaggle_to_s3 = KaggleToS3(
+    task_id = 'kaggle_to_s3',
     dag=dag,   
     datasets = [
         {'dataset': 'sudalairajkumar/undata-country-profiles'},
@@ -31,18 +31,11 @@ get_datasets = ImportFromKaggle(
         {'dataset': 'cristiangarrido/covid19geographicdistributionworldwide'}
     ],
     path = 'data',
-    )
-
-export_files = ExportToS3(
-    task_id = 'export_files_to_s3',
-    dag = dag,
-    filepath = 'data',
     bucket_name = 'covid-19-data-project',
     aws_conn_id = 's3_conn',
     )
 
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)
 
-start_operator >> get_datasets
-get_datasets >> export_files
-export_files >> end_operator
+start_operator >> kaggle_to_s3
+kaggle_to_s3 >> end_operator

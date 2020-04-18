@@ -1,7 +1,5 @@
-from operators.import_from_kaggle import ImportFromKaggle
-from operators.export_to_s3 import ExportToS3
+from operators.kaggle_to_s3 import KaggleToS3
 
 __all__ = [
-    'ImportFromKaggle',
-    'ExportToS3'
+    'KaggleToS3'
 ]

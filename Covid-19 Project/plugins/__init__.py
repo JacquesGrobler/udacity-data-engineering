@@ -9,6 +9,5 @@ import operators
 class MyPlugin(AirflowPlugin):
     name = "my_plugin"
     operators = [
-        operators.ImportFromKaggle,
-        operators.ExportToS3
+        operators.KaggleToS3
     ]

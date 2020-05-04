@@ -6,14 +6,16 @@ import operators
 import helpers
 
 # Defining the plugin class
-class MyPlugin(AirflowPlugin):
-    name = "my_plugin"
+class UdacityPlugin(AirflowPlugin):
+    name = "udacity_plugin"
     operators = [
-        operators.KaggleToS3,
         operators.S3ToRedshiftOperator,
-        operators.CreateOrDeleteOperator
+        operators.DataQualityOperator,
+        operators.CreateOrDeleteOperator,
+        operators.LoadTableOperator,
+        operators.KaggleToLocal,
+        operators.ExportToS3
     ]
-    
     helpers = [
         helpers.SqlQueries
     ]

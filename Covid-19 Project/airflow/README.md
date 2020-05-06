@@ -2,6 +2,7 @@
 
 ## Table of Contents
 - Scope
+- Data Pipeline
 - Data Model
 - Instructions to Run the Script
 - Summary of each function in create_tables.py
@@ -23,4 +24,14 @@ Kaggle data sources were used to create the above mentioned tables. The links to
 
 To create the five tables mentioned above staging tables first needed to be created, from the staging tables the first four tables were created (covid_19_cases_history, country_population, country_hospital_beds, country_tweets), from these tables the summary table (covid_19_cases_summary) was created. These steps are expained in more detail below.
 
+### Data Pipeline
+
+![image](https://user-images.githubusercontent.com/46716252/81141465-0701ff00-8f6d-11ea-8900-439da5069d70.png)
+
 ### Data Model
+
+The data is modelled as in the image below:
+
+![image](https://user-images.githubusercontent.com/46716252/81139963-0155ea80-8f68-11ea-9ff2-c7f5f28622c2.png)
+
+The tables were modelled in this way to make joing between tables easy, for example each table has country and country_code fields which can be used to join between any of the tables.

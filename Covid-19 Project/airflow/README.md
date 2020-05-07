@@ -24,9 +24,17 @@ Kaggle data sources were used to create the above mentioned tables. The links to
 
 To create the five tables mentioned above staging tables first needed to be created, from the staging tables the first four tables were created (covid_19_cases_history, country_population, country_hospital_beds, country_tweets), from these tables the summary table (covid_19_cases_summary) was created. These steps are expained in more detail below.
 
-### Data Pipeline
+### Data Pipeline and Tools Used
+In this project airflow is used to: 
+(1) Fetch files from Kaggle and store it on your local machine. An option is available to fetch an entire dataset or specific files in a dataset. Bigger files can be downloaded as zip files.
+(2) Push these files to an s3 bucket.
+(3) Create staging tables from these files on AWS Redshift.
+(4) From the staging tables create the four dimension tables. The steps that were taken to create these tables will be explained in the next section.
+(5) From these four dimension tables create the summary fact table. The creation of this table will be explained in the next section. 
 
 ![image](https://user-images.githubusercontent.com/46716252/81141465-0701ff00-8f6d-11ea-8900-439da5069d70.png)
+
+Airflow was chosen because it 
 
 ### Data Model
 
@@ -34,11 +42,117 @@ The data is modelled as in the image below:
 
 ![image](https://user-images.githubusercontent.com/46716252/81139963-0155ea80-8f68-11ea-9ff2-c7f5f28622c2.png)
 
-The tables were modelled in this way to make joing between tables easy, for example each table has country and country_code fields which can be used to join between any of the tables.
+The tables were modelled in this way to make joining between tables easy for analyses, for example each table has country and country_code fields which can be used to join between any of the tables. The steps taken to create each of the tables will now be explained:
+
+##### covid_19_cases_history
+
+covid_19_cases_staging is used as the base table, country_iso_stage is then joined to it to include country and country_code  (country_iso_stage is joined to all of the dimension tables to ensure that these values remain consistent and to ensure ease of joining between the tables). Conditions are then added to exclude records where country is null and to exclude records were date_of_record is null. This ERD for this tables can be seen below:
 
 ![image](https://user-images.githubusercontent.com/46716252/81256389-afc56280-9030-11ea-8287-d597f7bbb1a6.png)
 
+The SQL to insert data into covid_19_cases_history (can also be found in airflow/plugins/helpers.sql_queries.py):
+
+```
+select distinct 
+case when (b.alpha_3_code is null or b.alpha_3_code = '')
+then a.country else b.country
+end as country,
+b.alpha_3_code as country_code,
+cast(a.date_of_record as date) as reported_date,
+sum(a.confirmed) as confirmed_cases,
+sum(a.deaths) as deaths,
+sum(a.recovered) as recovered,
+sum(a.confirmed) - (sum(deaths) + sum(recovered)) as active_cases
+from public.covid_19_cases_stage as a
+left join public.country_iso_stage as b on (a.country = b.country or a.country = b.alpha_2_code or a.country = b.alpha_3_code)
+where a.country is not null
+and a.date_of_record is not null
+group by 1,2,3;
+```
+
+##### country_tweets
+
+tweets_stage is used as the base table which is first joined to cities_stage to get the country and iso value from the user_location field in tweets_stage. country_iso_stage is then joined to ensure that the country and country_code fields are consistent with the other tables. A coundition is added to ensure no records are included where the country value is null. This ERD for this tables can be seen below:
+
 ![image](https://user-images.githubusercontent.com/46716252/81256418-be137e80-9030-11ea-9f09-c37947ceeb04.png)
+
+The SQL to insert data into covid_19_cases_history (can also be found in airflow/plugins/helpers.sql_queries.py):
+
+```
+select distinct 
+case when (c.alpha_3_code is null or c.alpha_3_code = '')
+then a.country else c.country
+end as country,
+c.alpha_3_code as country_code,
+a.tweet_id,
+a.tweet,
+a.time
+from 
+(select
+b.country,
+b.iso3,
+t.tweet_id,
+t.tweet,
+t.time
+from public.tweets_stage as t
+LEFT join public.cities_stage as b on (SPLIT_PART(t.user_location, ', ', 1) = b.country)
+where b.country is not null
+union all 
+
+select
+b.country,
+b.iso3,
+t.tweet_id,
+t.tweet,
+t.time
+from public.tweets_stage as t
+LEFT join public.cities_stage as b on (SPLIT_PART(t.user_location, ', ', 2) = b.country)
+where b.country is not null
+union all 
+select
+b.country,
+b.iso3,
+t.tweet_id,
+t.tweet,
+t.time
+from public.tweets_stage as t
+LEFT join public.cities_stage as b on (SPLIT_PART(t.user_location, ', ', 2) = b.iso3)
+where b.country is not null
+union all
+select
+b.country,
+b.iso3,
+t.tweet_id,
+t.tweet,
+t.time
+from public.tweets_stage as t
+LEFT join public.cities_stage as b on (SPLIT_PART(t.user_location, ', ', 1) = b.City)
+where b.country is not null
+
+union all
+select
+b.country,
+b.iso3,
+t.tweet_id,
+t.tweet,
+t.time
+from public.tweets_stage as t
+LEFT join public.cities_stage as b on (SPLIT_PART(t.user_location, ', ', 2) = b.City)
+where b.country is not null
+union all
+select
+b.country,
+b.iso3,
+t.tweet_id,
+t.tweet,
+t.time
+from public.tweets_stage as t
+LEFT join public.cities_stage as b on (t.country like '%'+b.Country+'%')
+where b.country is not null) as a
+left join public.country_iso_stage as c on (a.country = c.country or a.iso3 = c.alpha_3_code);
+```
+
+##### country_population
 
 ![image](https://user-images.githubusercontent.com/46716252/81256411-b9e76100-9030-11ea-9266-44b9e011e9d0.png)
 

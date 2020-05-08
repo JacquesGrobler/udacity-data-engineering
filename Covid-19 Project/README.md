@@ -26,7 +26,7 @@ Apache airflow is used as the workflow manager in the data pipeline, the steps i
 
 (3) Deleting any staging tables if they already exists in Redshift. This is done by the CreateOrDeleteOperator custom operator, where the create_or_delete parameter is set to "delete", found in plugins/operators/create_or_delete_tables.py.
 
-(4) Creating staging tables and populating them with data from these files on AWS Redshift. This is done by the CreateOrDeleteOperator custom operator, where the create_or_delete parameter is set to "create", found in plugins/operators/create_or_delete_tables.py and then calling the S3ToRedshiftOperator operator found in s3_to_redshift.py.
+(4) Creating staging tables and populating them with data from these files on AWS Redshift. This is done by the CreateOrDeleteOperator custom operator, where the create_or_delete parameter is set to "create", found in plugins/operators/create_or_delete_tables.py and then calling the S3ToRedshiftOperator operator found in plugins/operators/s3_to_redshift.py.
 
 (5) From the staging tables creating the four dimension tables. The steps that were taken to create these tables will be explained in the Data Model section. This is done by the LoadTableOperator custom operator found in plugins/operators/load_table.py.
 

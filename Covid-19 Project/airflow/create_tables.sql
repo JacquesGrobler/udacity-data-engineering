@@ -44,9 +44,9 @@ recovered integer,
 new_recovered_from_previous_day integer,
 active_cases integer,
 new_active_cases_from_previous_day integer,
-active_cases_per_1_million integer,
+active_cases_per_1_million real,
 population bigint,
-approx_cases_needing_hospital_beds integer,
+approx_cases_needing_hospital_beds real,
 total_hospital_beds integer,
 percentage_tweets_per_sample real
 );

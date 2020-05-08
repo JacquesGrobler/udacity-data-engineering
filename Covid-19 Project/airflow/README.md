@@ -3,6 +3,7 @@
 ## Table of Contents
 - Scope
 - Data Pipeline
+- Kaggle Data Sources
 - Data Model
 - Instructions to Run the Script
 
@@ -26,7 +27,7 @@ The steps include:
 
 ### Kaggle Data Sources
 
-Kaggle data sources were used to create the above mentioned tables. The links to these data sources:
+Kaggle data sources were used to create the tables in the data model. The links to these data sources:
 - https://www.kaggle.com/imdevskp/corona-virus-report which has data in CSV format on the amount of cases, deaths and recovered per day. This data source has about 27 200 rows of data.
 - https://www.kaggle.com/cristiangarrido/covid19geographicdistributionworldwide, the most important files in this data source are the country ISO file (csv) which has country names and country codes, hospital beds by country (csv) which shows the amount of hospital beds per country and total population by country (csv) which shows the total population for each country. This data source has about 600 rows of data.
 - https://www.kaggle.com/aellatif/covid19 this data source has two csv files of tweet data which is about 1 720 000 rows of data.  
@@ -38,7 +39,51 @@ The data is modelled as in the image below:
 
 ![image](https://user-images.githubusercontent.com/46716252/81139963-0155ea80-8f68-11ea-9ff2-c7f5f28622c2.png)
 
-The tables were modelled in this way to make joining between tables easy for analyses, for example each table has country and country_code fields which can be used to join between any of the tables. The steps taken to create each of the tables will now be explained:
+The tables were modelled in this way to make joining between tables easy for analyses, for example each table has country and country_code fields, which are consistent accross all tables, and can be used to join between any of the tables. The steps taken to create each of the tables will now be explained:
+
+##### covid_19_cases_summary
+
+covid_19_cases_summary is created using covid_19_cases_history as the base table and using only the latest day's values. The other tables are all then joined on the country column to add additional information. The SQL to insert data into covid_19_cases_history (can also be found in airflow/plugins/helpers.sql_queries.py):
+
+```
+select distinct
+rank() over(order by a.confirmed_cases desc) as rank_by_confirmed_cases,
+a.country,
+a.country_code,
+a.reported_date,
+a.confirmed_cases,
+(a.confirmed_cases - b.confirmed_cases) as new_confirmed_cases_from_previous_day,
+a.deaths,
+(a.deaths - b.deaths) as new_deaths_from_previous_day,
+a.recovered,
+(a.recovered - b.recovered) as new_recovered_from_previous_day,
+a.active_cases,
+(a.active_cases - b.active_cases) as new_active_cases_from_previous_day,
+(a.active_cases*1000000)/c.population as active_cases_per_1_million,
+c.population,
+a.active_cases*0.05 as approx_cases_needing_hospital_beds,
+d.total_beds as total_hospital_beds,
+e.percentage_of_sample as percentage_tweets_per_sample
+from (
+select 
+rank() over(partition by country order by reported_date desc) as rank
+, * 
+from public.covid_19_cases_history) as a
+left join public.covid_19_cases_history as b on (a.country = b.country and (a.reported_date - interval '1 day') = b.reported_date)
+left join public.country_population as c on (a.country = c.country)
+left join public.country_hospital_beds as d on (a.country = d.country)
+left join 
+(select 
+	t.country,
+	((t.tweet_count*100)/(sum(t.tweet_count) over ()))::real as percentage_of_sample
+	from
+	(select 
+	country,
+	count(tweet) as tweet_count
+	from public.country_tweets
+	group by 1) as t) as e on (a.country = e.country)
+where a.rank = 1; 
+```
 
 ##### covid_19_cases_history
 

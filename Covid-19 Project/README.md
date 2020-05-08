@@ -25,7 +25,7 @@ The steps include:
 (4) Creating staging tables from these files on AWS Redshift.
 (5) From the staging tables creating the four dimension tables. The steps that were taken to create these tables will be explained in the Data Model section.
 (6) From these four dimension tables creating the summary fact table. The creation of this table will be explained in the data model section. 
-(7) Doing data quality checks on these tables. This invloves ensuring all table have data in them and are not empty. Other data quality measures include conditions in inserting data into the different tables, such as excluding records that have null values for fields that shouldn't be null.
+(7) Doing data quality checks on these tables. This invloves ensuring all table have data in them and are not empty. Other data quality measures include conditions in inserting data into the different tables, such as excluding records that have null values for fields that shouldn't be null and including contraints in the create table statements (found in create_tables.sql).
 (8) Deleting the staging tables.
 
 ### Kaggle Data Sources

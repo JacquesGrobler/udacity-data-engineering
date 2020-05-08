@@ -43,7 +43,7 @@ The tables were modelled in this way to make joining between tables easy for ana
 
 ##### covid_19_cases_summary
 
-covid_19_cases_summary is created using covid_19_cases_history as the base table and using only the latest day's values. The other tables are all then joined on the country column to add additional information. The SQL to insert data into covid_19_cases_history (can also be found in airflow/plugins/helpers.sql_queries.py):
+covid_19_cases_summary is created using covid_19_cases_history as the base table and using only the latest day's values. The other tables are all then joined on the country column to add additional information. See create_tables.sql to see the constraints on the different columns for the table. The SQL to insert data into covid_19_cases_history (can also be found in airflow/plugins/helpers.sql_queries.py):
 
 ```
 select distinct
@@ -87,7 +87,7 @@ where a.rank = 1;
 
 ##### covid_19_cases_history
 
-covid_19_cases_staging is used as the base table, country_iso_stage is then joined to it to include country and country_code  (country_iso_stage is joined to all of the dimension tables to ensure that these values remain consistent and to ensure ease of joining between the tables). Conditions are then added to exclude records where country is null and to exclude records where date_of_record is null, to ensure data quality. The ERD for this tables can be seen below:
+covid_19_cases_staging is used as the base table, country_iso_stage is then joined to it to include country and country_code  (country_iso_stage is joined to all of the dimension tables to ensure that these values remain consistent and to ensure ease of joining between the tables). Conditions are then added to exclude records where country is null and to exclude records where date_of_record is null, to ensure data quality. See create_tables.sql to see the constraints on the different columns for the table. The ERD for this tables can be seen below:
 
 ![image](https://user-images.githubusercontent.com/46716252/81256389-afc56280-9030-11ea-8287-d597f7bbb1a6.png)
 
@@ -113,7 +113,7 @@ group by 1,2,3;
 
 ##### country_tweets
 
-tweets_stage is used as the base table which is first joined to cities_stage to get the country and iso value from the user_location field in tweets_stage. country_iso_stage is then joined to ensure that the country and country_code fields are consistent with the other tables. A coundition is added to ensure no records are included where the country value is null. The ERD for this tables can be seen below:
+tweets_stage is used as the base table which is first joined to cities_stage to get the country and iso value from the user_location field in tweets_stage. country_iso_stage is then joined to ensure that the country and country_code fields are consistent with the other tables. A coundition is added to ensure no records are included where the country value is null. See create_tables.sql to see the constraints on the different columns for the table. The ERD for this tables can be seen below:
 
 ![image](https://user-images.githubusercontent.com/46716252/81256418-be137e80-9030-11ea-9f09-c37947ceeb04.png)
 
@@ -195,7 +195,7 @@ left join public.country_iso_stage as c on (a.country = c.country or a.iso3 = c.
 
 ##### country_population
 
-population_by_country_stage is used as the base table, country_iso_stage is then joined to ensure that the country and country_code fields are consistent with the other tables. Conditions are added which exclude any records where population, alpha_3_code or country is null, to ensure data quality. The ERD for this tables can be seen below:
+population_by_country_stage is used as the base table, country_iso_stage is then joined to ensure that the country and country_code fields are consistent with the other tables. Conditions are added which exclude any records where population, alpha_3_code or country is null, to ensure data quality. See create_tables.sql to see the constraints on the different columns for the table. The ERD for this tables can be seen below:
 
 ![image](https://user-images.githubusercontent.com/46716252/81256411-b9e76100-9030-11ea-9266-44b9e011e9d0.png)
 
@@ -217,7 +217,7 @@ and p.country is not null;
 
 ##### country_hospital_beds
 
-hospital_beds_stage is used as the base table, population_by_country_stage is joined to work out the total number of beds per country and country_iso_stage is joined to ensure that the country and country_code fields are consistent with the other tables. Conditions are added to exclude any records where country, country_code or hospital_beds_per_1000 are null. The ERD for this tables can be seen below:
+hospital_beds_stage is used as the base table, population_by_country_stage is joined to work out the total number of beds per country and country_iso_stage is joined to ensure that the country and country_code fields are consistent with the other tables. Conditions are added to exclude any records where country, country_code or hospital_beds_per_1000 are null. See create_tables.sql to see the constraints on the different columns for the table. The ERD for this tables can be seen below:
 
 ![image](https://user-images.githubusercontent.com/46716252/81256402-b5bb4380-9030-11ea-90c0-01c8fd9dd326.png)
 

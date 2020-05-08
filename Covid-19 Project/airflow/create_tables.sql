@@ -1,12 +1,3 @@
-Select Id,
-	Phoenix_People_Id__pc,
-	LastModifiedDate,
-	replicated_from_phoenix__pc,
-	phoenix_replication_date_check__pc,
-	Phoenix_People_Created_At__pc
-	From Account
-Where PersonEmail in ('testing@getsmarter.co.za', 'testcrm@getsmarter.co.za', 'testcrm2@getsmarter.co.za', 'test@test.test', 'testing@getsmarter.com', 'test@test.com', 'testing2@getsmarter.co.za', 'testtesting@getsmarter.co.za')
-
 CREATE TABLE IF NOT EXISTS public.covid_19_cases_history (
 country varchar(256),
 country_code varchar(256), 

@@ -307,5 +307,9 @@ chmod 600 ~/.kaggle/kaggle.json
 - **s3_conn:** connection type "S3" and in the extras field paste your AWS admin user access Key ID and Secret Access Key in json format, it should look like this: {"aws_access_key_id":"XXXXXXXXXXXXXXXXXXXX", "aws_secret_access_key": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"}
 - **aws_credentials:** connection type "Amazon Web Services" and paste your AWS admin user access Key ID in the login fields and secret Access Key in the password field.
 - **redshift:** connection type Postgres, the host is the endpoint (without the port and database at the end), schema is the database name and then add the database user and password that was created when creating the cluster, finally add the port number which would be 5439.
+
+7: Ensure that the correct bucket name is entered in all paramters in the DAG (Lines 44, 68, 81, 94, 107, 120, 133, 146).
+
+8: (Optional), if you indend to download the Kaggle data to a different path then that needs to be specified in lines 37 and 43. 
 	
-7: Run the dag.
+9: Run the dag.

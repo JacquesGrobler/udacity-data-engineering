@@ -154,6 +154,55 @@ left join public.country_iso_stage as c on (a.country = c.country or a.iso3 = c.
 
 ##### country_population
 
+population_by_country_stage is used as the base table, country_iso_stage is then joined to ensure that the country and country_code fields are consistent with the other tables. This ERD for this tables can be seen below:
+
 ![image](https://user-images.githubusercontent.com/46716252/81256411-b9e76100-9030-11ea-9266-44b9e011e9d0.png)
 
+The SQL to insert data into covid_19_cases_history (can also be found in airflow/plugins/helpers.sql_queries.py):
+
+```
+select distinct
+case when (c.alpha_3_code is null or c.alpha_3_code = '')
+then p.country else c.country
+end as country,
+p.alpha_3_code as country_code,
+p.population
+from public.population_by_country_stage as p
+left join public.country_iso_stage as c on p.alpha_3_code = c.alpha_3_code
+where p.population is not null
+and p.alpha_3_code is not null
+and p.country is not null;
+```
+
+##### country_hospital_beds
+
+hospital_beds_stage is used as the base table, population_by_country_stage is joined to work out the total number of beds per country and country_iso_stage is joined to ensure that the country and country_code fields are consistent with the other tables. This ERD for this tables can be seen below:
+
 ![image](https://user-images.githubusercontent.com/46716252/81256402-b5bb4380-9030-11ea-90c0-01c8fd9dd326.png)
+
+
+The SQL to insert data into covid_19_cases_history (can also be found in airflow/plugins/helpers.sql_queries.py):
+
+```
+select 
+case when (c.alpha_3_code is null or c.alpha_3_code = '')
+then a.country else c.country
+end as country,
+a.country_code,
+a.year_of_report,
+a.hospital_beds_per_1000,
+a.total_beds
+from
+(select distinct
+p.country,
+h.country_code,
+h.year as year_of_report,
+h.hospital_beds_per_1000,
+(h.hospital_beds_per_1000*p.population)/1000 as total_beds                                     
+from public.hospital_beds_stage as h
+left join public.population_by_country_stage as p on h.country_code = p.alpha_3_code
+where p.country is not null
+and h.country_code is not null
+and h.hospital_beds_per_1000 is not null) as a
+left join public.country_iso_stage as c on a.country_code = c.alpha_3_code
+```

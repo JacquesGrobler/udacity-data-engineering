@@ -18,15 +18,15 @@ The data pipeline built is visually represented in the image below:
 
 ![image](https://user-images.githubusercontent.com/46716252/81408991-914d8d00-913e-11ea-9244-aaf24278c6d2.png)
 
-The steps include:
-(1) Fetching files from Kaggle and storing it on your local machine. An option is available to fetch an entire dataset or specific files in a dataset. Bigger files can be downloaded as zip files. 
-(2) Pushing these files to an s3 bucket.
-(3) Deleting any staging tables if they already exists in Redshift.
-(4) Creating staging tables from these files on AWS Redshift.
-(5) From the staging tables creating the four dimension tables. The steps that were taken to create these tables will be explained in the Data Model section.
-(6) From these four dimension tables creating the summary fact table. The creation of this table will be explained in the data model section. 
-(7) Doing data quality checks on these tables. This invloves ensuring all table have data in them and are not empty. Other data quality measures include conditions in inserting data into the different tables, such as excluding records that have null values for fields that shouldn't be null and including contraints in the create table statements (found in create_tables.sql).
-(8) Deleting the staging tables.
+Apache airflow is used as the workflow manager in the data pipeline, the steps include:
+(1) Fetching files from Kaggle and storing it on your local machine. An option is available to fetch an entire dataset or specific files in a dataset. Bigger files can be downloaded as zip files. This is done by the KaggleToLocal custom operator found in plugins/operators/import_from_kaggle.py.
+(2) Pushing these files to an s3 bucket. This is done by the ExportToS3 custom operator found in plugins/operators/export_to_s3.py.
+(3) Deleting any staging tables if they already exists in Redshift. This is done by the CreateOrDeleteOperator custom operator, where the create_or_delete parameter is set to "delete", found in plugins/operators/create_or_delete_tables.py.
+(4) Creating staging tables and populating them with data from these files on AWS Redshift. This is done by the CreateOrDeleteOperator custom operator, where the create_or_delete parameter is set to "create", found in plugins/operators/create_or_delete_tables.py and then calling the S3ToRedshiftOperator operator found in s3_to_redshift.py.
+(5) From the staging tables creating the four dimension tables. The steps that were taken to create these tables will be explained in the Data Model section. This is done by the LoadTableOperator custom operator found in plugins/operators/load_table.py.
+(6) From these four dimension tables creating the summary fact table. The creation of this table will be explained in the data model section. This is done by the LoadTableOperator custom operator found in plugins/operators/load_table.py.
+(7) Doing data quality checks on these tables. This invloves ensuring all table have data in them and are not empty. Other data quality measures include conditions in inserting data into the different tables, such as excluding records that have null values for fields that shouldn't be null and including contraints in the create table statements (found in create_tables.sql). This is done by the DataQualityOperator custom operator found in plugins/operators/data_quality.py.
+(8) Deleting the staging tables. This is done by the CreateOrDeleteOperator custom operator, where the create_or_delete parameter is set to "delete", found in plugins/operators/create_or_delete_tables.py.
 
 ### Kaggle Data Sources
 

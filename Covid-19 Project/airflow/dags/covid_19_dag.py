@@ -7,7 +7,7 @@ from helpers import SqlQueries
 default_args = {
     'owner': 'me',
     'depends_on_past': False,
-    'start_date': dt.datetime(2020, 4, 18, 0, 0, 0, 0),
+    'start_date': dt.datetime.now(),
     'email_on_retry': False,
     'retries': 3,
     'retry_delay': dt.timedelta(minutes=5),
@@ -17,7 +17,7 @@ default_args = {
 dag = DAG('covid_19_dag',
           default_args=default_args,
           description='Loads data from kaggle to an s3 bucket',
-          schedule_interval=None,
+          schedule_interval='0 7 * * *',
           max_active_runs=1,
          )
 

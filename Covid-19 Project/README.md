@@ -5,6 +5,7 @@
 - Data Pipeline
 - Kaggle Data Sources
 - Data Model
+- Data Dictionaries
 - Technologies Chosen
 - Addressing Other Scenarios 
 - Instructions to Run the Script
@@ -249,6 +250,22 @@ and h.country_code is not null
 and h.hospital_beds_per_1000 is not null) as a
 left join public.country_iso_stage as c on a.country_code = c.alpha_3_code
 ```
+
+### Data Dictionaries
+
+Below are the data dictionaries for the 5 final tables:
+
+##### covid_19_cases_summary
+
+![image](https://user-images.githubusercontent.com/46716252/81407120-28184a80-913b-11ea-8986-d12c92b9b628.png)
+
+##### covid_19_cases_history
+
+##### country_tweets
+
+##### country_population
+
+##### country_hospital_beds
 
 ### Technologies Chosen
 

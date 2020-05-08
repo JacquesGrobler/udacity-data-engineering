@@ -5,36 +5,32 @@
 - Data Pipeline
 - Data Model
 - Instructions to Run the Script
-- Summary of each function in create_tables.py
-- Summary of each function in etl.py
 
 ### Scope
-The purpose of this project is to create a data pipeline that fetches data from Kaggle, pushes the data into s3 and from there pushes the data to Redshift to create tables **for analysis** on the COVID-19 virus. These tables include: 
-- A case history table which will show the amount of cases, deaths and recovered per day per country (covid_19_cases_history)
-- A country population table which shows the population per country (country_population)
-- A table which show the amount of hospital beds per country (country_hospital_beds)
-- A table which shows a sample of tweets per country around the time that the virus was declared a pandemic (country_tweets)
-- A case summary table which shows the latest cases, deaths and recovered, the amount of hospital beds used, cases per 1 million of the population and the percentage of sample tweets from that country (covid_19_cases_summary).
+The scope of this project includes creating a data piplines which fetches data from Kaggle, pushes the data into s3 and from there pushes the data to Redshift to create tables **for analysis** on the COVID-19 virus. 
+
+### Data Pipeline and Tools Used
+The data pipeline built is visually represented in the image below: 
+
+![image](https://user-images.githubusercontent.com/46716252/81370794-50ca2100-90f6-11ea-94c5-177acb4a6177.png)
+
+The steps include:
+(1) Fetching files from Kaggle and storing it on your local machine. An option is available to fetch an entire dataset or specific files in a dataset. Bigger files can be downloaded as zip files. 
+(2) Pushing these files to an s3 bucket.
+(3) Deleting any staging tables if they already exists in Redshift.
+(4) Creating staging tables from these files on AWS Redshift.
+(5) From the staging tables creating the four dimension tables. The steps that were taken to create these tables will be explained in the Data Model section.
+(6) From these four dimension tables creating the summary fact table. The creation of this table will be explained in the data model section. 
+(7) Doing data quality checks on these tables. This invloves ensuring all table have data in them and are not empty. Other data quality measures include conditions in inserting data into the different tables, such as excluding records that have null values for fields that shouldn't be null.
+(8) Deleting the staging tables.
+
+### Kaggle Data Sources
 
 Kaggle data sources were used to create the above mentioned tables. The links to these data sources:
 - https://www.kaggle.com/imdevskp/corona-virus-report which has data in CSV format on the amount of cases, deaths and recovered per day. This data source has about 27 200 rows of data.
 - https://www.kaggle.com/cristiangarrido/covid19geographicdistributionworldwide, the most important files in this data source are the country ISO file (csv) which has country names and country codes, hospital beds by country (csv) which shows the amount of hospital beds per country and total population by country (csv) which shows the total population for each country. This data source has about 600 rows of data.
 - https://www.kaggle.com/aellatif/covid19 this data source has two csv files of tweet data which is about 1 720 000 rows of data.  
 - https://www.kaggle.com/juanmah/world-cities this data source has a csv file that shows city names of a country and has about 13 000 rows of data.
-
-To create the five tables mentioned above staging tables first needed to be created, from the staging tables the first four tables were created (covid_19_cases_history, country_population, country_hospital_beds, country_tweets), from these tables the summary table (covid_19_cases_summary) was created. These steps are expained in more detail below.
-
-### Data Pipeline and Tools Used
-In this project airflow is used to: 
-(1) Fetch files from Kaggle and store it on your local machine. An option is available to fetch an entire dataset or specific files in a dataset. Bigger files can be downloaded as zip files.
-(2) Push these files to an s3 bucket.
-(3) Create staging tables from these files on AWS Redshift.
-(4) From the staging tables create the four dimension tables. The steps that were taken to create these tables will be explained in the next section.
-(5) From these four dimension tables create the summary fact table. The creation of this table will be explained in the next section. 
-
-![image](https://user-images.githubusercontent.com/46716252/81141465-0701ff00-8f6d-11ea-8900-439da5069d70.png)
-
-Airflow was chosen because it 
 
 ### Data Model
 

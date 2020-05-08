@@ -13,7 +13,7 @@
 ### Scope
 The scope of this project includes creating a data piplines which fetches data from Kaggle, pushes the data into s3 and from there pushes the data to Redshift to create tables **for analysis** on the COVID-19 virus. 
 
-### Data Pipeline and Tools Used
+### Data Pipeline
 The data pipeline built is visually represented in the image below: 
 
 ![image](https://user-images.githubusercontent.com/46716252/81408991-914d8d00-913e-11ea-9244-aaf24278c6d2.png)

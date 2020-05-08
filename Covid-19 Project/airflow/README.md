@@ -5,6 +5,8 @@
 - Data Pipeline
 - Kaggle Data Sources
 - Data Model
+- Why Airflow
+- Addressing Other Scenarios 
 - Instructions to Run the Script
 
 ### Scope
@@ -247,3 +249,49 @@ and h.country_code is not null
 and h.hospital_beds_per_1000 is not null) as a
 left join public.country_iso_stage as c on a.country_code = c.alpha_3_code
 ```
+
+### Why Airflow
+
+### Addressing Other Scenarios 
+
+### Instructions to Run the Script
+
+1: Ensure that airflow has been installed and set up, refer the the Airflow Quickstart guide: https://airflow.apache.org/docs/stable/start.html
+
+2: Install the Kaggle Client:
+`pip3 install kaggle`
+
+3: Generate API Tokens. To do this create an account on Kaggle, go to your account and find the API section:
+
+![image](https://user-images.githubusercontent.com/46716252/81373283-a4d80400-90fc-11ea-9ace-a5b44c5eb420.png)
+
+Select "Create New API Token".This downloads a kaggle.json file with the API tokens in it. We need to move this file to – ~/.kaggle/kaggle.json.
+
+**Note:** Please make sure to not share the tokens with anyone. These are secrets.
+
+To create a folder in your home directory for the kaggle.json file, and move the file there:
+```
+mkdir ~/.kaggle
+mv <source path> <destination path>
+mv ~/Downloads/kaggle.json ~/.kaggle/kaggle.json
+```
+
+You might get this error if the file permissions are too relaxed:
+*Your kaggle API key is readable by other users on this system.*
+
+To fix this issue you can run following command:
+
+```
+chmod 600 ~/.kaggle/kaggle.json
+```
+
+4: Create a redshift cluster, ensure that the cluster is in the same region as the s3 bucket that you are going to use.
+
+5: Once the cluster is created run the CREATE TABLE scripts in the create_tables.sql file.
+
+6: Launch Airflow and add the necessary connections:
+	- **s3_conn:** connection type "S3" and in the extras field paste you AWS admin user access Key ID and Secret Access Key in json format, it should look like this: {"aws_access_key_id":"XXXXXXXXXXXXXXXXXXXX", "aws_secret_access_key": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"}
+	- **aws_credentials:** connection type "Amazon Web Services" and paste your AWS admin user access Key ID in the login fields and secret Access Key in the password field.
+	- **redshift:** connection type Postgres, the host is the endpoint (without the port and database at the end), schema is the database name and then add the database user and password that was created when creating the cluster, finally add the port number which would be 5439.
+	
+7: Run the dag.

@@ -265,7 +265,7 @@ left join public.country_iso_stage as c on a.country_code = c.alpha_3_code
 
 ![image](https://user-images.githubusercontent.com/46716252/81373283-a4d80400-90fc-11ea-9ace-a5b44c5eb420.png)
 
-Select "Create New API Token".This downloads a kaggle.json file with the API tokens in it. We need to move this file to – ~/.kaggle/kaggle.json.
+Select "Create New API Token".This downloads a kaggle.json file with the API tokens in it. This file needs to be moved to – ~/.kaggle/kaggle.json.
 
 **Note:** Please make sure to not share the tokens with anyone. These are secrets.
 

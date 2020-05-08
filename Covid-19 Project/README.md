@@ -265,7 +265,7 @@ Below are the data dictionaries for the 5 final tables:
 
 ##### covid_19_cases_summary
 
-![image](https://user-images.githubusercontent.com/46716252/81416520-23a75e00-914a-11ea-81bf-3b44e43a84db.png)
+![image](https://user-images.githubusercontent.com/46716252/81425098-38d6b980-9157-11ea-84ad-6b1e6cfe80e7.png)
 
 ##### covid_19_cases_history
 

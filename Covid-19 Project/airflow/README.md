@@ -290,8 +290,8 @@ chmod 600 ~/.kaggle/kaggle.json
 5: Once the cluster is created run the CREATE TABLE scripts in the create_tables.sql file.
 
 6: Launch Airflow and add the necessary connections:
-	- **s3_conn:** connection type "S3" and in the extras field paste you AWS admin user access Key ID and Secret Access Key in json format, it should look like this: {"aws_access_key_id":"XXXXXXXXXXXXXXXXXXXX", "aws_secret_access_key": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"}
-	- **aws_credentials:** connection type "Amazon Web Services" and paste your AWS admin user access Key ID in the login fields and secret Access Key in the password field.
-	- **redshift:** connection type Postgres, the host is the endpoint (without the port and database at the end), schema is the database name and then add the database user and password that was created when creating the cluster, finally add the port number which would be 5439.
+- **s3_conn:** connection type "S3" and in the extras field paste your AWS admin user access Key ID and Secret Access Key in json format, it should look like this: {"aws_access_key_id":"XXXXXXXXXXXXXXXXXXXX", "aws_secret_access_key": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"}
+- **aws_credentials:** connection type "Amazon Web Services" and paste your AWS admin user access Key ID in the login fields and secret Access Key in the password field.
+- **redshift:** connection type Postgres, the host is the endpoint (without the port and database at the end), schema is the database name and then add the database user and password that was created when creating the cluster, finally add the port number which would be 5439.
 	
 7: Run the dag.

@@ -335,6 +335,6 @@ chmod 600 ~/.kaggle/kaggle.json
 
 7: Ensure that the correct bucket name is entered in all paramters in the DAG (Lines 44, 68, 81, 94, 107, 120, 133, 146).
 
-8: (Optional), if you indend to download the Kaggle data to a different path then that needs to be specified in lines 37 and 43. 
+8: (Optional), if you intend to download the Kaggle data to a different path then that needs to be specified in lines 37 and 43. 
 	
 9: Run the dag.

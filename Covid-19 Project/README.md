@@ -16,7 +16,7 @@ The scope of this project includes creating a data piplines which fetches data f
 ### Data Pipeline and Tools Used
 The data pipeline built is visually represented in the image below: 
 
-![image](https://user-images.githubusercontent.com/46716252/81370794-50ca2100-90f6-11ea-94c5-177acb4a6177.png)
+![image](https://user-images.githubusercontent.com/46716252/81408991-914d8d00-913e-11ea-9244-aaf24278c6d2.png)
 
 The steps include:
 (1) Fetching files from Kaggle and storing it on your local machine. An option is available to fetch an entire dataset or specific files in a dataset. Bigger files can be downloaded as zip files. 

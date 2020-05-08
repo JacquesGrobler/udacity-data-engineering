@@ -42,7 +42,7 @@ The data is modelled as in the image below:
 
 ![image](https://user-images.githubusercontent.com/46716252/81139963-0155ea80-8f68-11ea-9ff2-c7f5f28622c2.png)
 
-The tables were modelled in this way to make joining between tables easy for analyses, for example each table has country and country_code fields, which are consistent accross all tables, and can be used to join between any of the tables. The steps taken to create each of the tables will now be explained:
+The tables were modelled in this way to make joining between tables easy for analyses, for example each table has country and country_code fields, which are consistent across all tables, and can be used to join between any of the tables. The steps taken to create each of the tables will now be explained:
 
 ##### covid_19_cases_summary
 

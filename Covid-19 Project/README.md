@@ -1,7 +1,7 @@
 # Data Engineering Capstone Project
 
 ## Table of Contents
-- Scope
+- Scope 
 - Data Pipeline
 - Kaggle Data Sources
 - Data Model
@@ -261,11 +261,19 @@ Below are the data dictionaries for the 5 final tables:
 
 ##### covid_19_cases_history
 
+![image](https://user-images.githubusercontent.com/46716252/81408286-3d8e7400-913d-11ea-9348-c925f95c0bbd.png)
+
 ##### country_tweets
+
+![image](https://user-images.githubusercontent.com/46716252/81408342-5b5bd900-913d-11ea-8290-fc5142766c46.png)
 
 ##### country_population
 
+![image](https://user-images.githubusercontent.com/46716252/81408424-7c242e80-913d-11ea-84a8-a33d04d31008.png)
+
 ##### country_hospital_beds
+
+![image](https://user-images.githubusercontent.com/46716252/81408487-9bbb5700-913d-11ea-97cc-b774e031cd84.png)
 
 ### Technologies Chosen
 

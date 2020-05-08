@@ -28,7 +28,7 @@ country varchar(256) NOT NULL,
 country_code varchar(256),
 tweet_id bigint PRIMARY KEY,
 tweet varchar(10000),
-	time timestamp
+time timestamp
 );
 
 CREATE TABLE IF NOT EXISTS public.covid_19_cases_summary (

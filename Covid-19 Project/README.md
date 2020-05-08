@@ -18,7 +18,7 @@ The data pipeline built is visually represented in the image below:
 
 ![image](https://user-images.githubusercontent.com/46716252/81408991-914d8d00-913e-11ea-9244-aaf24278c6d2.png)
 
-Apache airflow is used as the workflow manager in the data pipeline, the steps include:
+Apache airflow is used as the workflow manager in the data pipeline which is scheduled to run every morning 7am because some of the data sources get updated daily, the steps include:
 
 (1) Fetching files from Kaggle and storing it on your local machine. An option is available to fetch an entire dataset or specific files in a dataset. Bigger files can be downloaded as zip files. This is done by the KaggleToLocal custom operator found in plugins/operators/import_from_kaggle.py.
 

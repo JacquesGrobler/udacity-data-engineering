@@ -70,7 +70,7 @@ a.recovered,
 (a.recovered - b.recovered) as new_recovered_from_previous_day,
 a.active_cases,
 (a.active_cases - b.active_cases) as new_active_cases_from_previous_day,
-(a.active_cases*1000000)/c.population as active_cases_per_1_million,
+(a.active_cases::bigint*1000000)/c.population as active_cases_per_1_million,
 c.population,
 a.active_cases*0.05 as approx_cases_needing_hospital_beds,
 d.total_beds as total_hospital_beds,
@@ -86,7 +86,7 @@ left join public.country_hospital_beds as d on (a.country = d.country)
 left join 
 (select 
 	t.country,
-	((t.tweet_count*100)/(sum(t.tweet_count) over ()))::real as percentage_of_sample
+	((t.tweet_count::bigint*100)/(sum(t.tweet_count::bigint) over ()))::real as percentage_of_sample
 	from
 	(select 
 	country,

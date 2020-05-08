@@ -5,7 +5,7 @@
 - Data Pipeline
 - Kaggle Data Sources
 - Data Model
-- Why Airflow
+- Technologies Chosen
 - Addressing Other Scenarios 
 - Instructions to Run the Script
 
@@ -250,13 +250,27 @@ and h.hospital_beds_per_1000 is not null) as a
 left join public.country_iso_stage as c on a.country_code = c.alpha_3_code
 ```
 
-### Why Airflow
+### Technologies Chosen
+
+Apache airflow was chosen as the workflow manager, AWS s3 was chosen for data storage and AWS Redshift was chosen as the data warehouse, where the data is modelled. 
+
+This was chosen because of the easy compatibility between systems and allows for a fully automated process from fetching data in Kaggle to create the final data model. At the moment the total amount of data moving through the pipeline is less than 2 million rows which is handled quite easily by the current pipeline.
 
 ### Addressing Other Scenarios 
 
+Below are possible scenarios that could happen and will need to be addressed: 
+
+*The data was increased by 100x:* If the data gets increased by by 100x Apache Spark could be used. Once the files are in s3 Apache Spark can be used to process the data, partition the data by da specific time interval (e.g.day) and send these files back to the s3 bucket, from there Airflow could once again be used to append data for only that particular time interval the the existing tables (the append option is available in the current pipeline tasks).
+
+
+*The pipelines would be run on a daily basis by 7 am every day:* Airflow provides the scheduling function, so the pipeline can easy be set to run every day 7am. Currently the pipeline shouldn't take more than 20 min to run.
+
+
+*The database needed to be accessed by 100+ people:* If this is the case each person will need to have his/her own user and password to access the database with each user given appropriate permissions to ensure only certain users can make changes on the database, e.g. create or update tables. Different schemas can be created for the different business needs to make it easier for the users to find needed tables. Amazon Redshift WLM can also be configured to run with automatic WLM, which will maximize system throughput and use resources effectively.
+
 ### Instructions to Run the Script
 
-1: Ensure that airflow has been installed and set up, refer the the Airflow Quickstart guide: https://airflow.apache.org/docs/stable/start.html
+1: Ensure that airflow has been installed and set up, refer to the Airflow Quickstart guide: https://airflow.apache.org/docs/stable/start.html
 
 2: Install the Kaggle Client:
 `pip3 install kaggle`
